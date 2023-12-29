@@ -7,17 +7,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import java.util.UUID;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import javafx.geometry.Pos;
-
-import java.util.UUID;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Aplikasi Rental Mobil yang memungkinkan pengguna untuk login, registrasi,
@@ -31,7 +30,7 @@ import java.util.Map;
  * - Menampilkan nomor Virtual Account untuk pembayaran.
  * </p>
  *
- * @author kelompok Rent Car
+ * @author Kelompok Rent Car
  *
  */
 public class CombinedApp extends Application {
@@ -58,6 +57,7 @@ public class CombinedApp extends Application {
      *
      * @param primaryStage Panggung utama aplikasi.
      */
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Rental Mobil App");
@@ -70,7 +70,6 @@ public class CombinedApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
     /**
      * Metode untuk membuat antarmuka pengguna untuk login.
      *
@@ -101,6 +100,13 @@ public class CombinedApp extends Application {
         grid.getChildren().addAll(usernameField, passwordField, loginButton, registerButton);
         return grid;
     }
+
+
+    private boolean isPasswordValid(String password) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\p{Punct}).+$";
+        return password.matches(regex);
+    }
+
 
     /**
      * Metode untuk menangani login pengguna.
@@ -139,6 +145,8 @@ public class CombinedApp extends Application {
             showAlert("Error", "Password must contain at least one uppercase letter, one lowercase letter, and one symbol.");
         }
     }
+
+
 
     private void showCarSelection() {
         GridPane grid = new GridPane();
@@ -235,7 +243,7 @@ public class CombinedApp extends Application {
     private void showVirtualAccountScene() {
 
         if (brandComboBox == null || modelComboBox == null || daysField == null) {
-            showAlert("Error", "Internal error: Missing UI components. Please try again.");
+            showAlert("Error", "The fields cannot empty");
             return;
         }
 
@@ -371,18 +379,6 @@ public class CombinedApp extends Application {
 
         // Menghapus karakter "-" dan mengambil hanya digit
         return uuid.replaceAll("-", "").replaceAll("[a-zA-Z]", "");
-    }
-
-
-    private void showPaymentScene(String virtualAccount, double totalPrice) {
-        BorderPane paymentLayout = new BorderPane();
-        Label accountLabel = new Label("Virtual Account: " + virtualAccount);
-        Label totalLabel = new Label("Total Price: Rp" + totalPrice);
-        paymentLayout.setTop(accountLabel);
-        paymentLayout.setCenter(totalLabel);
-
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-        stage.setScene(new Scene(paymentLayout, 400, 300));
     }
 
 
